@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 
 
 
-export default function JsonBuilder(props) {
+export default function ServerSetupPage(props) {
     const [conf, setConf] = useState(null);
     const [error, setError] = useState(null);
     const [modalStatus, setModalStatus] = useState(false);
@@ -40,4 +40,4 @@ export default function JsonBuilder(props) {
 
 }
 
-export default JsonBuilder;
+export default ServerSetupPage;
