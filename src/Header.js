@@ -37,7 +37,7 @@ function Header(props) {
                         </Grid>
                         <Grid item xs />
                         <Grid item>
-                            <Link
+{/*                            <Link
                                 href="/"
                                 variant="body2"
                                 sx={{
@@ -51,7 +51,7 @@ function Header(props) {
                                 target="_blank"
                             >
                                 Go to docs
-                            </Link>
+                            </Link>*/}
                         </Grid>
                         <Grid item>
                             <Tooltip title="Alerts • No alerts">
@@ -83,33 +83,33 @@ function Header(props) {
                             </Typography>
                         </Grid>
                         <Grid item>
-                            <Button
+{/*                            <Button
                                 sx={{ borderColor: lightColor }}
                                 variant="outlined"
                                 color="inherit"
                                 size="small"
                             >
                                 Web setup
-                            </Button>
+                            </Button>*/}
                         </Grid>
-                        <Grid item>
+{/*                        <Grid item>
                             <Tooltip title="Help">
                                 <IconButton color="inherit">
                                     <HelpIcon />
                                 </IconButton>
                             </Tooltip>
-                        </Grid>
+                        </Grid>*/}
                     </Grid>
                 </Toolbar>
             </AppBar>
-            <AppBar component="div" position="static" elevation={0} sx={{ zIndex: 0 }}>
+{/*            <AppBar component="div" position="static" elevation={0} sx={{ zIndex: 0 }}>
                 <Tabs value={0} textColor="inherit">
                     <Tab label="Users" />
                     <Tab label="Sign-in method" />
                     <Tab label="Templates" />
                     <Tab label="Usage" />
                 </Tabs>
-            </AppBar>
+            </AppBar>*/}
         </React.Fragment>
     );
 }

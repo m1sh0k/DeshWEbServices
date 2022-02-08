@@ -1,8 +1,15 @@
 const { spawn,exec  } = require('child_process');
+const path = require('path');
 
 
 module.exports = function (app){
-    app.get('/runBatFile', function (req, res) {
+
+    app.post('/getConfig',function(req, res){
+        let fileConfig = path.join(__dirname,'../../../DeshConfigs/config.json');
+        res.sendFile(fileConfig);
+    })
+
+    app.post('/runBatFile', function (req, res) {
 
         const fileBat = path.join(__dirname,'../myPostgreSQL/StartDB.bat');
         const bat = spawn(fileBat, { shell: true });
@@ -20,7 +27,7 @@ module.exports = function (app){
         });
     })
 
-    app.get('/stopBatFile', function (req, res) {
+    app.post('/stopBatFile', function (req, res) {
 
         const fileBat = path.join(__dirname,'../myPostgreSQL/StopDB.bat');
         const bat = spawn(fileBat, { shell: true });
@@ -37,5 +44,10 @@ module.exports = function (app){
             console.log(`Child exited with code ${code}`);
         });
     })
+
+    //The 404 Route
+    app.get('*', function(req, res){
+        res.status(404).send('We are sorry but the page you are looking for does not exist.');
+    });
 }
 

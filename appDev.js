@@ -21,6 +21,7 @@ const webpackHRM = require('webpack-hot-middleware');
 const compiler = webpack(configWP);
 app.use(devMiddleware(compiler, {
     //noInfo: true,
+    writeToDisk: true,
     publicPath:  configWP.output.publicPath,
 }));
 app.use((webpackHRM)(compiler));

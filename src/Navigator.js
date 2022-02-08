@@ -69,7 +69,7 @@ export default function Navigator(props) {
         <Drawer variant="permanent" {...other}>
             <List disablePadding>
                 <ListItem sx={{ ...item, ...itemCategory, fontSize: 22, color: '#fff' }}>
-                    Paperbase
+                    DeshWebServices
                 </ListItem>
                 <ListItem sx={{ ...item, ...itemCategory }}>
                     <ListItemIcon>

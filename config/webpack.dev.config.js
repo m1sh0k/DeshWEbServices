@@ -1,5 +1,5 @@
 const path = require('path');
-const WriteFilePlugin = require('write-file-webpack-plugin');
+
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require("webpack");
 
@@ -22,9 +22,9 @@ module.exports = {
     },
 
     output: {
-        path: path.resolve(__dirname, '../public/dev'),
+        path: path.join(__dirname, '../public/dev'),
         filename: 'bundle.js',
-        publicPath: '/' || path.resolve(__dirname, '../public/'),
+        publicPath: '/' || path.join(__dirname, '../public/'),
     },
     module: {
         rules: [
@@ -61,21 +61,10 @@ module.exports = {
                     }
                 ]
             },
-            // {
-            //     test: /\.mp3$/,
-            //     loader: 'file-loader'
-            // }
-
         ]
     },
     plugins: [
-        new WriteFilePlugin({
-            // exclude hot-update files
-            test: /^(?!.*(hot)).*/,
-            //OR
-            // Write only files that have ".js", ".html" extension.
-            //test: /.(js|html?)$^(?!.*(hot)).*/,
-        }),
+
         new HtmlWebpackPlugin({
             template: path.resolve(__dirname, '../public/htmlTemp/index.html')
         }),
