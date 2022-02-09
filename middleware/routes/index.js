@@ -9,15 +9,26 @@ var DevError = require('./../error').DevError;
 module.exports = function (app){
 
     app.post('/getConfig',async function(req, res, next){
-        let fileConfig = path.join(__dirname,'../../../DeshConfigs/config.json');
-        res.sendFile(fileConfig);
+        try{
+            console.log('/getConfig');
+            let data = await fs.promises.readFile('../DeshConfigs/config.json', {encoding: 'UTF-8'});
+            console.log('/getConfig data: ',data);
+            res.json(data);
+        }catch (err) {
+            return next(err);
+        }
     })
 
     app.post('/getFileConfig',async function(req, res, next){
-        let fileName = req.body.fileName;
-        if(!fileName) return next(new HttpError(403, 'Invalid data request. You dont set file name.'));
-        let fileConfig = await fs.promises.readFile('../../../DeshConfigs/'+fileName, {encoding: 'UTF-8'});
-        res.sendFile(fileConfig);
+        try{
+            console.log('/getFileConfig');
+            let fileName = req.body.fileName;
+            if(!fileName) return next(new HttpError(403, 'Invalid data request. You dont set file name.'));
+            let fileConfig = await fs.promises.readFile('../../../DeshConfigs/'+fileName, {encoding: 'UTF-8'});
+            res.sendFile(fileConfig);
+        }catch(err){
+            return next(err);
+        }
     })
 
     app.post('/saveConfig',async function(req, res, next){
