@@ -1,22 +1,19 @@
-async function getResource(){
+let getResource;
+export default getResource = async function(...props){
     try {
-        //e.preventDefault();
-        //let data;
-        let res = await fetch('/getConfig',{
-            method:'post',
-            //body: JSON.stringify(data),
+
+        let res = await fetch(props.link,{
+            method: props.method,
+            body: JSON.stringify(props.data),
             headers:{'Content-Type': 'application/json',},
         });
         if(res.ok) {
+            console.log("fetch res: ",res);
             res = await res.json();
-            console.log("login res: ",res);
-            sessionStorage.setItem('user', JSON.stringify(res.user));
-            this.setState({ chatRedirect: true });
-        } else {
-            //Error message
+            return res
         }
     } catch (err){
         console.log("login err: ",err);
-        //Error message
+        return err
     }
 };

@@ -1,20 +1,50 @@
 const { spawn,exec  } = require('child_process');
 const path = require('path');
+const fs = require('fs');
+var HttpError = require('./../error').HttpError;
+var AuthError = require('./../error').AuthError;
+var DevError = require('./../error').DevError;
 
 
 module.exports = function (app){
 
-    app.post('/getConfig',function(req, res){
+    app.post('/getConfig',async function(req, res, next){
         let fileConfig = path.join(__dirname,'../../../DeshConfigs/config.json');
         res.sendFile(fileConfig);
     })
 
-    app.post('/runBatFile', function (req, res) {
+    app.post('/getFileConfig',async function(req, res, next){
+        let fileName = req.body.fileName;
+        if(!fileName) return next(new HttpError(403, 'Invalid data request. You dont set file name.'));
+        let fileConfig = await fs.promises.readFile('../../../DeshConfigs/'+fileName, {encoding: 'UTF-8'});
+        res.sendFile(fileConfig);
+    })
 
-        const fileBat = path.join(__dirname,'../myPostgreSQL/StartDB.bat');
-        const bat = spawn(fileBat, { shell: true });
+    app.post('/saveConfig',async function(req, res, next){
+        try{
+            let fileData = req.body.fileData;
+            let fileName = req.body.fileName;
+            if(!fileData || !fileName) return next(new HttpError(403, 'Invalid data request. You dont set file name or config data.'));
+            await fs.promises.appendFile('../../../DeshConfigs/'+fileName, fileData + '\r',);
+            res.sendStatus(200);
+        }catch(err){
+            return next(err);
+        }
+    })
 
-        bat.stdout.on('data', (data) => {
+    app.post('/runDeshServer', function (req, res) {
+
+        const fileBat = path.join(__dirname,'../myPostgreSQL/StartDB.bat');//get link
+        const bat = spawn(fileBat, { shell: true });//create child_process
+        let config = path.join(__dirname,'../../../DeshConfigs/config.json');//server config file link
+        console.log("fileJson: ",config.toString());
+        config.toString();
+        let dataObj = JSON.parse(config);
+        console.log("dataObj: ",dataObj);
+        let arrOfArgs = Object.values(dataObj.serverConfig);//server start arguments array
+        console.log("arrObjJson: ",arrOfArgs);
+
+        bat.stdout.on('data',arrOfArgs, (data) => {
             console.log("stdout: ",data.toString());
         });
 
@@ -27,7 +57,7 @@ module.exports = function (app){
         });
     })
 
-    app.post('/stopBatFile', function (req, res) {
+    app.post('/stopDeshServer', function (req, res) {
 
         const fileBat = path.join(__dirname,'../myPostgreSQL/StopDB.bat');
         const bat = spawn(fileBat, { shell: true });

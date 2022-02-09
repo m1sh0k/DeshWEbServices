@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState, useEffect } from "react";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -8,6 +8,15 @@ import Link from '@mui/material/Link';
 import Navigator from './Navigator.js';
 import Content from './Content.js';
 import Header from './Header.js';
+//my components
+import AuthPage from "./AuthPage";
+import ServerSetupPage from "./ServerSetupPage";
+import ServerControlPage from "./ServerControlPage";
+import EngineeringIcon from "@mui/icons-material/Engineering";
+import BuildIcon from "@mui/icons-material/Build";
+import DnsRoundedIcon from "@mui/icons-material/DnsRounded";
+import PermMediaOutlinedIcon from "@mui/icons-material/PhotoSizeSelectActual";
+
 
 let theme = createTheme({
   palette: {
@@ -155,17 +164,22 @@ theme = {
 const drawerWidth = 256;
 
 export default function Paperbase() {
-  const [mobileOpen, setMobileOpen] = React.useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
   const isSmUp = useMediaQuery(theme.breakpoints.up('sm'));
+  const [currentPage,setCurrentPage] = useState('Authentication');
 
-  const handleDrawerToggle = () => {
+  const handleDrawerToggle =()=>{
     setMobileOpen(!mobileOpen);
+  };
+
+  const toggleCurrentPage =(name)=>{
+    console.log("toggleCurrentPage name: ",name);
+    setCurrentPage(name);
   };
 
   return (
       <ThemeProvider theme={theme}>
         <Box sx={{ display: 'flex', minHeight: '100vh' }}>
-          <CssBaseline />
           <Box
               component="nav"
               sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
@@ -173,10 +187,46 @@ export default function Paperbase() {
             <Navigator
                 PaperProps={{ style: { width: drawerWidth } }}
                 sx={{ display: { sm: 'block', xs: 'none' } }}
+                toggleCurrentPage={toggleCurrentPage}
             />
           </Box>
           <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-            <Header onDrawerToggle={handleDrawerToggle} />
+            <Header onDrawerToggle={handleDrawerToggle} headerName={currentPage}/>
+            {
+              ((tabName) => {
+                console.log("tabName swicher: ",tabName);
+                switch (tabName) {
+                  case "Authentication":
+                    return (
+                        <AuthPage/>
+                    )
+                  case "Server Control":
+                    return (
+                      <ServerControlPage/>
+                    )
+                  case "Server Setup":
+                    return (
+                      <ServerSetupPage/>
+                    )
+/*                  case "Database":
+                    return (
+
+                    )
+                  case "Storage":
+                    return (
+
+                    )
+                  case "Reports":
+                    return (
+
+                    )*/
+
+                  default:
+                    console.log("Tab switch error. Sorry, we are out of " + tabName + ".");
+
+                }
+              })(currentPage)
+            }
           </Box>
         </Box>
       </ThemeProvider>

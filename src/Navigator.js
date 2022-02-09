@@ -12,6 +12,9 @@ import DnsRoundedIcon from '@mui/icons-material/DnsRounded';
 import PermMediaOutlinedIcon from '@mui/icons-material/PhotoSizeSelectActual';
 import EngineeringIcon from '@mui/icons-material/Engineering';
 import BuildIcon from '@mui/icons-material/Build';
+import ReportIcon from '@mui/icons-material/Report';
+
+
 
 const categories = [
     {
@@ -21,10 +24,11 @@ const categories = [
                 icon: <PeopleIcon />,
                 active: true,
             },
-            {id: 'Server Control', icon: <EngineeringIcon />,},
+            {id: 'Server Control', icon: <EngineeringIcon />, },
             {id: 'Server Setup', icon: <BuildIcon />,},
             {id: 'Database', icon: <DnsRoundedIcon /> },
             {id: 'Storage', icon: <PermMediaOutlinedIcon /> },
+            {id: 'Reports', icon: <ReportIcon /> },
 
         ],
     },
@@ -60,7 +64,7 @@ export default function Navigator(props) {
                             <ListItemText sx={{ color: '#fff' }}>{id}</ListItemText>
                         </ListItem>
                         {children.map(({ id: childId, icon, active }) => (
-                            <ListItem disablePadding key={childId}>
+                            <ListItem disablePadding key={childId} onClick={()=> props.toggleCurrentPage(childId)}>
                                 <ListItemButton selected={active} sx={item}>
                                     <ListItemIcon>{icon}</ListItemIcon>
                                     <ListItemText>{childId}</ListItemText>
