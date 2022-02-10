@@ -12,6 +12,7 @@ import Header from './Header.js';
 import AuthPage from "./AuthPage";
 import ServerSetupPage from "./ServerSetupPage";
 import ServerControlPage from "./ServerControlPage";
+import ReportsPage from "./ReportsPage";
 import EngineeringIcon from "@mui/icons-material/Engineering";
 import BuildIcon from "@mui/icons-material/Build";
 import DnsRoundedIcon from "@mui/icons-material/DnsRounded";
@@ -167,13 +168,17 @@ export default function Paperbase() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const isSmUp = useMediaQuery(theme.breakpoints.up('sm'));
   const [currentPage,setCurrentPage] = useState('Authentication');
+  const [errorMessage,setErrorMessage] = useState(null);
 
   const handleDrawerToggle =()=>{
     setMobileOpen(!mobileOpen);
   };
 
-  const toggleCurrentPage =(name)=>{
-    console.log("toggleCurrentPage name: ",name);
+
+
+  const toggleActivePage =(name,data)=>{
+    //console.log("toggleActivePage name: ",name);
+    if(name === 'Reports') setErrorMessage(data);
     setCurrentPage(name);
   };
 
@@ -187,26 +192,33 @@ export default function Paperbase() {
             <Navigator
                 PaperProps={{ style: { width: drawerWidth } }}
                 sx={{ display: { sm: 'block', xs: 'none' } }}
-                toggleCurrentPage={toggleCurrentPage}
+                toggleActivePage={toggleActivePage}
+                activeTab={currentPage}
             />
           </Box>
           <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
             <Header onDrawerToggle={handleDrawerToggle} headerName={currentPage}/>
             {
               ((tabName) => {
-                console.log("tabName swicher: ",tabName);
+                //console.log("tabName swicher: ",tabName);
                 switch (tabName) {
                   case "Authentication":
                     return (
-                        <AuthPage/>
+                        <AuthPage
+
+                        />
                     )
                   case "Server Control":
                     return (
-                      <ServerControlPage/>
+                      <ServerControlPage
+
+                      />
                     )
                   case "Server Setup":
                     return (
-                      <ServerSetupPage/>
+                      <ServerSetupPage
+                          toggleActivePage={toggleActivePage}
+                      />
                     )
 /*                  case "Database":
                     return (
@@ -215,11 +227,13 @@ export default function Paperbase() {
                   case "Storage":
                     return (
 
-                    )
+                    )*/
                   case "Reports":
                     return (
-
-                    )*/
+                      <ReportsPage
+                          data={errorMessage}
+                      />
+                    )
 
                   default:
                     console.log("Tab switch error. Sorry, we are out of " + tabName + ".");

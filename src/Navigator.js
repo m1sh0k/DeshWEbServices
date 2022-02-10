@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState, useEffect } from "react";
 import Divider from '@mui/material/Divider';
 import Drawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
@@ -24,11 +24,11 @@ const categories = [
                 icon: <PeopleIcon />,
                 active: true,
             },
-            {id: 'Server Control', icon: <EngineeringIcon />, },
-            {id: 'Server Setup', icon: <BuildIcon />,},
-            {id: 'Database', icon: <DnsRoundedIcon /> },
-            {id: 'Storage', icon: <PermMediaOutlinedIcon /> },
-            {id: 'Reports', icon: <ReportIcon /> },
+            {id: 'Server Control', icon: <EngineeringIcon />, active: false,},
+            {id: 'Server Setup', icon: <BuildIcon />,active: false,},
+            {id: 'Database', icon: <DnsRoundedIcon /> ,active: false,},
+            {id: 'Storage', icon: <PermMediaOutlinedIcon />,active: false, },
+            {id: 'Reports', icon: <ReportIcon />,active: false, },
 
         ],
     },
@@ -49,8 +49,21 @@ const itemCategory = {
     px: 3,
 };
 
+const toggleTabFont =(name)=>{
+    console.log("nav toggleTabFont: ",(name));
+    categories.forEach((itm) => {
+        itm.children.forEach((itmChi)=>{
+            itmChi.active = itmChi.id === name;
+        })
+    })
+};
+
 export default function Navigator(props) {
+
     const { ...other } = props;
+    useEffect(() => {
+        toggleTabFont(props.activeTab)
+    },[props.activeTab]);
 
     return (
         <Drawer variant="permanent" {...other}>
@@ -64,7 +77,10 @@ export default function Navigator(props) {
                             <ListItemText sx={{ color: '#fff' }}>{id}</ListItemText>
                         </ListItem>
                         {children.map(({ id: childId, icon, active }) => (
-                            <ListItem disablePadding key={childId} onClick={()=> props.toggleCurrentPage(childId)}>
+                            <ListItem disablePadding key={childId} onClick={()=> {
+                                props.toggleActivePage(childId);
+                                toggleTabFont(childId);
+                            }}>
                                 <ListItemButton selected={active} sx={item}>
                                     <ListItemIcon>{icon}</ListItemIcon>
                                     <ListItemText>{childId}</ListItemText>
