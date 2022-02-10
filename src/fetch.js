@@ -14,12 +14,14 @@ export default getResource = async function(props){
         if(res.ok) {
             console.log("fetch res: ",res);
             res = await res.json();
-            return res
+            return ({err:null, res:res})
         }else{
             console.log("fetch err res: ",res);
+            res = await res.json();
+            return ({err:res, res:null})
         }
     } catch (err){
         console.log("fetch err: ",err);
-        return err
+        return ({err:err, res:null})
     }
 };

@@ -9,40 +9,27 @@ import getResource from "./fetch"
 export default function ServerSetupPage(props) {
     const [conf, setConf] = useState(null);
     const [error, setError] = useState(null);
-    const [modalStatus, setModalStatus] = useState(false);
-    const link = props.link;
+
     async function getConfigFile(){
         try {
             //e.preventDefault();
-            //let data;
-/*            let res = await fetch(link,{
-                method:'post',
-                //body: JSON.stringify(data),
-                headers:{'Content-Type': 'application/json',},
-            });
-            if(res.ok) {
-                res = await res.json();
-                console.log("jsonBuilder res: ",res);
-                setConf(res);
-            } else {
+            let {err:err,data:data} = await getResource({link:'/getConfig',method:'post',data:''});
+            if(err) {
                 //Error message
-                console.log("jsonBuilder err: ",err);
-                setError(res);
-                setModalStatus(true);
-            }*/
-            let data = await getResource({link:'/getConfig',method:'post',data:''});
-            console.log("setupPage /getConfig: ",data);
-            setConf(data);
+                //console.log("setupPage /getConfig err: ",err);
+                props.toggleActivePage('Reports',err);
+            }else{
+                console.log("setupPage /getConfig: ",data);
+                setConf(data);
+            }
         } catch (err){
             //Error message
-            console.log("setupPage /getConfig err: ",err);
-            setError(err);
-            setModalStatus(true);
+            //console.log("setupPage /getConfig err: ",err);
+            props.toggleActivePage('Reports',err);
         }
     };
-/*    useEffect(() => {
-        getConfigFile();
-    }, []);*/
+    //download config file after opening tab
+    /*    useEffect(() => getConfigFile(),[]); */
     return (
         <div>
             <Button variant="outlined"
