@@ -17,6 +17,9 @@ import EngineeringIcon from "@mui/icons-material/Engineering";
 import BuildIcon from "@mui/icons-material/Build";
 import DnsRoundedIcon from "@mui/icons-material/DnsRounded";
 import PermMediaOutlinedIcon from "@mui/icons-material/PhotoSizeSelectActual";
+import Button from "@mui/material/Button";
+import PeopleIcon from "@mui/icons-material/People";
+import ReportIcon from "@mui/icons-material/Report";
 
 
 let theme = createTheme({
@@ -169,18 +172,47 @@ export default function Paperbase() {
   const isSmUp = useMediaQuery(theme.breakpoints.up('sm'));
   const [currentPage,setCurrentPage] = useState('Authentication');
   const [errorMessage,setErrorMessage] = useState(null);
+  const [categories,setCategories] = useState([
+    {
+      children: [
+        {
+          id: 'Authentication',
+          icon: <PeopleIcon />,
+          active: true,
+        },
+        {id: 'Server Control', icon: <EngineeringIcon />, active: false,},
+        {id: 'Server Setup', icon: <BuildIcon />,active: false,},
+        {id: 'Database', icon: <DnsRoundedIcon /> ,active: false,},
+        {id: 'Storage', icon: <PermMediaOutlinedIcon />,active: false, },
+        {id: 'Reports', icon: <ReportIcon />,active: false, },
+
+      ],
+    },
+  ])
+
 
   const handleDrawerToggle =()=>{
     setMobileOpen(!mobileOpen);
   };
 
-
+  const updateCategories =(name)=>{
+    //console.log("nav toggleTabFont: ",(name));
+    categories.forEach((itm) => {
+      itm.children.forEach((itmChi)=>{
+        itmChi.active = itmChi.id === name;
+      })
+    })
+    //console.log("nav categories: ",categories);
+    return categories;
+  }
 
   const toggleActivePage =(name,data)=>{
     //console.log("toggleActivePage name: ",name);
-    if(name === 'Reports') setErrorMessage(data);
+    if(name === 'Reports' && data) setErrorMessage(data);
+    setCategories(updateCategories(name));
     setCurrentPage(name);
   };
+  console.log("errorMessage: ",errorMessage);
 
   return (
       <ThemeProvider theme={theme}>
@@ -193,7 +225,8 @@ export default function Paperbase() {
                 PaperProps={{ style: { width: drawerWidth } }}
                 sx={{ display: { sm: 'block', xs: 'none' } }}
                 toggleActivePage={toggleActivePage}
-                activeTab={currentPage}
+                categories={categories}
+                key={currentPage}
             />
           </Box>
           <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
@@ -237,7 +270,6 @@ export default function Paperbase() {
 
                   default:
                     console.log("Tab switch error. Sorry, we are out of " + tabName + ".");
-
                 }
               })(currentPage)
             }

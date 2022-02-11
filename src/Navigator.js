@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useCallback } from "react";
 import Divider from '@mui/material/Divider';
 import Drawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
@@ -16,23 +16,23 @@ import ReportIcon from '@mui/icons-material/Report';
 
 
 
-const categories = [
-    {
-        children: [
-            {
-                id: 'Authentication',
-                icon: <PeopleIcon />,
-                active: true,
-            },
-            {id: 'Server Control', icon: <EngineeringIcon />, active: false,},
-            {id: 'Server Setup', icon: <BuildIcon />,active: false,},
-            {id: 'Database', icon: <DnsRoundedIcon /> ,active: false,},
-            {id: 'Storage', icon: <PermMediaOutlinedIcon />,active: false, },
-            {id: 'Reports', icon: <ReportIcon />,active: false, },
-
-        ],
-    },
-];
+// const categories = [
+//     {
+//         children: [
+//             {
+//                 id: 'Authentication',
+//                 icon: <PeopleIcon />,
+//                 active: true,
+//             },
+//             {id: 'Server Control', icon: <EngineeringIcon />, active: false,},
+//             {id: 'Server Setup', icon: <BuildIcon />,active: false,},
+//             {id: 'Database', icon: <DnsRoundedIcon /> ,active: false,},
+//             {id: 'Storage', icon: <PermMediaOutlinedIcon />,active: false, },
+//             {id: 'Reports', icon: <ReportIcon />,active: false, },
+//
+//         ],
+//     },
+// ];
 
 const item = {
     py: '2px',
@@ -49,24 +49,24 @@ const itemCategory = {
     px: 3,
 };
 
-const toggleTabFont =(name)=>{
-    console.log("nav toggleTabFont: ",(name));
-    categories.forEach((itm) => {
-        itm.children.forEach((itmChi)=>{
-            itmChi.active = itmChi.id === name;
-        })
-    })
-};
+
 
 export default function Navigator(props) {
 
-    const { ...other } = props;
-    useEffect(() => {
-        toggleTabFont(props.activeTab)
-    },[props.activeTab]);
+    const { currentPage,categories,toggleActivePage,...other } = props;
+    console.log("navigator cat update: ",categories[0].children);
+
+    // const toggleTabFont =(name)=>{
+    //     console.log("nav toggleTabFont: ",(name));
+    //     categories.forEach((itm) => {
+    //         itm.children.forEach((itmChi)=>{
+    //             itmChi.active = itmChi.id === name;
+    //         })
+    //     })
+    // };
 
     return (
-        <Drawer variant="permanent" {...other}>
+        <Drawer key={currentPage} variant="permanent" {...other}>
             <List disablePadding>
                 <ListItem sx={{ ...item, ...itemCategory, fontSize: 22, color: '#fff' }}>
                     DeshWebServices
@@ -76,17 +76,19 @@ export default function Navigator(props) {
                         <ListItem sx={{ py: 2, px: 3 }}>
                             <ListItemText sx={{ color: '#fff' }}>{id}</ListItemText>
                         </ListItem>
-                        {children.map(({ id: childId, icon, active }) => (
-                            <ListItem disablePadding key={childId} onClick={()=> {
-                                props.toggleActivePage(childId);
-                                toggleTabFont(childId);
-                            }}>
-                                <ListItemButton selected={active} sx={item}>
-                                    <ListItemIcon>{icon}</ListItemIcon>
-                                    <ListItemText>{childId}</ListItemText>
-                                </ListItemButton>
-                            </ListItem>
-                        ))}
+                        {
+                            children.map(({ id: childId, icon, active }) =>
+                                    <ListItem disablePadding key={childId} onClick={()=> {
+                                        toggleActivePage(childId);
+                                        //toggleTabFont(childId);
+                                    }}>
+                                        <ListItemButton selected={active} sx={item}>
+                                            <ListItemIcon>{icon}</ListItemIcon>
+                                            <ListItemText>{childId}</ListItemText>
+                                        </ListItemButton>
+                                    </ListItem>
+                            )
+                        }
 
                         <Divider sx={{ mt: 2 }} />
                     </Box>
