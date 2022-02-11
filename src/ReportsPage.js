@@ -7,7 +7,7 @@ import Page from "../../react-express-webpack-PG/src/layout/page";
 
 
 export default function ReportsPage(props) {
-    console.log("ReportsPage(props): ",props);
+    //console.log("ReportsPage(props): ",props);
     return (
         <div>
             {props.data ? <h1>ERROR:  {props.data.status} </h1> : ''}

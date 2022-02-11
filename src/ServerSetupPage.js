@@ -7,6 +7,7 @@ import getResource from "./fetch"
 
 
 export default function ServerSetupPage(props) {
+    const { toggleActivePage } = props;
     const [conf, setConf] = useState(null);
     const [error, setError] = useState(null);
 
@@ -17,7 +18,7 @@ export default function ServerSetupPage(props) {
             if(err) {
                 //Error message
                 //console.log("setupPage /getConfig err: ",err);
-                props.toggleActivePage('Reports',err);
+                toggleActivePage('Reports',err);
             }else{
                 console.log("setupPage /getConfig: ",data);
                 setConf(data);
@@ -25,7 +26,7 @@ export default function ServerSetupPage(props) {
         } catch (err){
             //Error message
             //console.log("setupPage /getConfig err: ",err);
-            props.toggleActivePage('Reports',err);
+            toggleActivePage('Reports',err);
         }
     };
     //download config file after opening tab
