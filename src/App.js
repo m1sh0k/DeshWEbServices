@@ -208,10 +208,11 @@ export default function Paperbase() {
 
   const toggleActivePage =(name,data)=>{
     //console.log("toggleActivePage name: ",name);
-    if(name === 'Reports') setErrorMessage(data);
-    setCurrentPage(name);
+    if(name === 'Reports' && data) setErrorMessage(data);
     setCategories(updateCategories(name));
+    setCurrentPage(name);
   };
+  console.log("errorMessage: ",errorMessage);
 
   return (
       <ThemeProvider theme={theme}>
@@ -225,6 +226,7 @@ export default function Paperbase() {
                 sx={{ display: { sm: 'block', xs: 'none' } }}
                 toggleActivePage={toggleActivePage}
                 categories={categories}
+                key={currentPage}
             />
           </Box>
           <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
@@ -268,7 +270,6 @@ export default function Paperbase() {
 
                   default:
                     console.log("Tab switch error. Sorry, we are out of " + tabName + ".");
-
                 }
               })(currentPage)
             }

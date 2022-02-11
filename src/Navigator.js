@@ -53,20 +53,20 @@ const itemCategory = {
 
 export default function Navigator(props) {
 
-    const { categories,toggleActivePage,...other } = props;
+    const { currentPage,categories,toggleActivePage,...other } = props;
     console.log("navigator cat update: ",categories[0].children);
 
-    const toggleTabFont =(name)=>{
-        console.log("nav toggleTabFont: ",(name));
-        categories.forEach((itm) => {
-            itm.children.forEach((itmChi)=>{
-                itmChi.active = itmChi.id === name;
-            })
-        })
-    };
+    // const toggleTabFont =(name)=>{
+    //     console.log("nav toggleTabFont: ",(name));
+    //     categories.forEach((itm) => {
+    //         itm.children.forEach((itmChi)=>{
+    //             itmChi.active = itmChi.id === name;
+    //         })
+    //     })
+    // };
 
     return (
-        <Drawer variant="permanent" {...other}>
+        <Drawer key={currentPage} variant="permanent" {...other}>
             <List disablePadding>
                 <ListItem sx={{ ...item, ...itemCategory, fontSize: 22, color: '#fff' }}>
                     DeshWebServices
@@ -78,7 +78,6 @@ export default function Navigator(props) {
                         </ListItem>
                         {
                             children.map(({ id: childId, icon, active }) =>
-
                                     <ListItem disablePadding key={childId} onClick={()=> {
                                         toggleActivePage(childId);
                                         //toggleTabFont(childId);
@@ -88,8 +87,6 @@ export default function Navigator(props) {
                                             <ListItemText>{childId}</ListItemText>
                                         </ListItemButton>
                                     </ListItem>
-
-
                             )
                         }
 
