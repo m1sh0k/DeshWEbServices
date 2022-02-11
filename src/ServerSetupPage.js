@@ -32,7 +32,7 @@ export default function ServerSetupPage(props) {
     //download config file after opening tab
     /*    useEffect(() => getConfigFile(),[]); */
     return (
-        <div>
+        <div className='main-content'>
             <Button variant="outlined"
                     onClick={()=> getConfigFile()}
             >Get Current Server Config</Button>

@@ -10,7 +10,7 @@ export default function ServerControlPage(props) {
     const [serverStateOn, setServerStateOn] = useState(false);
 
     return (
-        <div>
+        <div className='main-content'>
             {
                 serverStateOn === false ?
                 <div className='buttonGroup'>
@@ -23,9 +23,11 @@ export default function ServerControlPage(props) {
                         <Button variant="outlined">Stop Server</Button>
                     </div>
             }
-            <Button variant="outlined">Restart Server</Button>
-            <Button variant="outlined">Tutn Off Machine</Button>
-            <Button variant="outlined">Restart Machine</Button>
+            <div className='buttonGroup'>
+                <Button variant="outlined">Restart Server</Button>
+                <Button variant="outlined">Turn Off Machine</Button>
+                <Button variant="outlined">Restart Machine</Button>
+            </div>
         </div>
     )
 

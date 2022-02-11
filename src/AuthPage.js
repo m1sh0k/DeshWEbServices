@@ -8,7 +8,7 @@ import getResource from "./fetch"
 export default function AuthPage(props) {
 
     return (
-        <div>
+        <div className='main-content'>
             <li>Hello World! This is Auth page.</li>
         </div>
     )
