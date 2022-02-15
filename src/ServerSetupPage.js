@@ -68,8 +68,8 @@ export default function ServerSetupPage(props) {
         }
         const newTable = [...table];
         console.log("newTable: ",newTable);
-        !nestArrInx ?  newTable.splice(inx,0,{newKey:"newValue"}) :
-            newTable[nestArrInx].value.splice(inx,0,{newKey:"newValue"})
+        !nestArrInx ?  newTable.splice(inx,0,{ key: "newKey", value: "newValue" }) :
+            newTable[nestArrInx].value.splice(inx,0,{ key: "newKey", value: "newValue" })
         setTable(newTable);
     }
 
