@@ -27,7 +27,8 @@ app.use(devMiddleware(compiler, {
 app.use((webpackHRM)(compiler));
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: false, limit: '5mb'}));
+app.use(bodyParser.urlencoded({extended: true, limit: '5mb'}));
+//app.use(express.urlencoded({extended: true, limit: '5mb'}));
 //
 //Session
 // app.use(session({

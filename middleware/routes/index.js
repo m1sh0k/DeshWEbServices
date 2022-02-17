@@ -1,6 +1,7 @@
 const { spawn,exec  } = require('child_process');
 const path = require('path');
 const fs = require('fs');
+var validate = require('jsonschema').validate;
 var HttpError = require('./../error').HttpError;
 var AuthError = require('./../error').AuthError;
 var DevError = require('./../error').DevError;
@@ -24,7 +25,7 @@ module.exports = function (app){
             console.log('/getFileConfig');
             let fileName = req.body.fileName;
             if(!fileName) return next(new HttpError(403, 'Invalid data request. You dont set file name.'));
-            let fileConfig = await fs.promises.readFile('../../../DeshConfigs/'+fileName, {encoding: 'UTF-8'});
+            let fileConfig = await fs.promises.readFile('../DeshConfigs/'+fileName, {encoding: 'UTF-8'});
             res.sendFile(fileConfig);
         }catch(err){
             return next(err);
@@ -33,11 +34,19 @@ module.exports = function (app){
 
     app.post('/saveConfig',async function(req, res, next){
         try{
+            console.log('/saveConfig req.body: ',req.body);
+            //console.log(validate(4, {"type": "number"}));
             let fileData = req.body.fileData;
             let fileName = req.body.fileName;
             if(!fileData || !fileName) return next(new HttpError(403, 'Invalid data request. You dont set file name or config data.'));
-            await fs.promises.appendFile('../../../DeshConfigs/'+fileName, fileData + '\r',);
-            res.sendStatus(200);
+            fileData = JSON.stringify(fileData);
+            console.log("stringify fileData: ",fileData);
+            console.log('/saveConfig validate json: ',validate(2, {fileData}));
+            if(validate(2, {fileData}).errors.length > 0) return next(new HttpError(403, 'Invalid JSON data.'+val.errors));
+            await fs.promises.unlink('../DeshConfigs/'+fileName);
+            await fs.promises.appendFile('../DeshConfigs/'+fileName, fileData + '\r',);
+            //res.status(200)
+            res.status(200).json({message:"File saved successful."});
         }catch(err){
             return next(err);
         }

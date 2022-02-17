@@ -6,8 +6,8 @@ export default getResource = async function(props){
             method: props.method,
             body: JSON.stringify(props.data),
             headers:{
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'X-Requested-With': 'XMLHttpRequest'
+                'Content-Type': "application/json"//'application/x-www-form-urlencoded',
+                //'X-Requested-With': 'XMLHttpRequest'
             },
         });
 

@@ -12,29 +12,66 @@ export default function ServerSetupPage(props) {
     const { toggleActivePage } = props;
     const [table,setTable] = useState(null);
     const [error, setError] = useState(null);
-
-    function parseData(data){
-        let parseArray = [];
+    //parse to array of obj
+    let parseArray = [];
+    function parseData(data,key){
+        //console.log("parseData(data): ",data);
+        let tempArr = [];
         for(let [key, value] of Object.entries(data)){
-            if(typeof value === 'object') {
-                parseArray.push({key:key,value:[]});
-                for(let [keyS, valueS] of Object.entries(value)){
-                    parseArray[parseArray.length - 1].value.push({key:keyS,value:valueS});
-                }
-            }else parseArray.push({key:key,value:value});
+            if(typeof value === 'string') {
+                tempArr.push({key:key,value:value});
+            }else  parseData(value,key);
         }
-        console.log("ConfigEditor parseArray: ",parseArray);
+        //console.log("key: ",key,", tempArr: ",tempArr);
+        if(key) {
+            parseArray.push({key:key,value:tempArr})
+        }else parseArray = [...tempArr,...parseArray]
         return parseArray;
+    }
+    //parse to json style
+    let objJson = {};
+    function parseToJson(data,key){
+        //console.log("parseToJson(data): ",data);
+        let tempObj = {};
+        for(let itm of data) {
+            if(typeof itm.value === 'string') {
+                tempObj[itm.key] = itm.value;
+            }else parseToJson(itm.value,itm.key);
+        }
+        //console.log("key: ",key,", tempObj: ",tempObj);
+        if(key) {
+            objJson[key] = {...tempObj}
+        }else objJson = {...tempObj,...objJson}
+        return objJson;
+    }
+
+    async function saveConfig(){
+        try{
+            console.log("table: ",table);
+            let jsonData =  parseToJson(table);
+            console.log("jsonData: ",jsonData);
+            let {err:err,res:data} = await getResource({link:'/saveConfig',method:'post',data: {fileData:jsonData,fileName:"config.json"}});
+            if(err) {
+                //Error message
+                console.log("setupPage /saveConfig err: ",err);
+                toggleActivePage('Reports',err);
+            }else{
+                console.log("setupPage /saveConfig: ",data);
+                toggleActivePage('Reports',{message:data.message,status:200});
+            }
+        }catch(err){
+            console.log("setupPage /saveConfig err: ",err);
+            toggleActivePage('Reports',err);
+        }
     }
 
     useEffect(() => {
         const fetchData= async ()=>{
             try {
-                //e.preventDefault();
-                let {err:err,res:data} = await getResource({link:'/getConfig',method:'post',data:''});
+                let {err:err,res:data} = await getResource({link:'/getConfig',method:'post'});
                 if(err) {
                     //Error message
-                    //console.log("setupPage /getConfig err: ",err);
+                    console.log("setupPage /getConfig err: ",err);
                     toggleActivePage('Reports',err);
                 }else{
                     console.log("setupPage /getConfig: ",JSON.parse(data));
@@ -42,7 +79,7 @@ export default function ServerSetupPage(props) {
                 }
             } catch (err){
                 //Error message
-                //console.log("setupPage /getConfig err: ",err);
+                console.log("setupPage /getConfig err: ",err);
                 toggleActivePage('Reports',err);
             }
         };
@@ -115,17 +152,24 @@ export default function ServerSetupPage(props) {
                 <span>Config Description</span>
                 {
                     table ? table.map((itm,i)=>
-                        typeof itm.value !== 'object' ? <div className="CategoriesGruop">
+                        typeof itm.value !== 'object' ? <div className="categoriesGroup">
                                 <TextField
-                                    key={"Categories"+itm.key}
-                                    label={itm.key}
+                                    className="serverConfig key"
+                                    key={"categoriesKeys"+itm.key}
+                                    defaultValue={itm.key}
+                                    variant="outlined"
+                                />
+                            <b>:</b>
+                                <TextField
+                                    className="serverConfig value"
+                                    key={"categoriesValues"+itm.key}
                                     defaultValue={itm.value}
                                     variant="outlined"
                                 />
                                 <Button variant="contained" size="small" onClick={()=>addRow(i)}>ADD</Button>
                                 <Button variant="contained" size="small" onClick={()=>remRow(i)}>DEL</Button>
                             </div>
-                            : <div className="subCategories">
+                            : <div className="subCategoriesGroup">
                                 <span>{itm.key}</span>
                                 {
                                     itm.value.map((itmV,iV)=> <div className="serverConfig">
@@ -136,6 +180,7 @@ export default function ServerSetupPage(props) {
                                                 defaultValue={itmV.key}
                                                 variant="outlined"
                                             />
+                                        <b>:</b>
                                             <TextField
                                                 className="serverConfig value"
                                                 key={"subCategoriesValues"+itmV.key}
@@ -150,6 +195,7 @@ export default function ServerSetupPage(props) {
                     ) : ""
                 }
             </div>
+            <Button variant="contained" size="medium" onClick={()=>saveConfig()}>Upload Config</Button>
         </div>
     )
 }
